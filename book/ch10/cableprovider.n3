@@ -70,17 +70,17 @@ d:SInternet
       q:enablesCandidate d:InternetSymptom .
 
 d:STV
-      a       q:SelectedAnswer , q:Answer ;
+      a       q:Answer ;
       q:answerText "Cable TV" ;
       q:enablesCandidate d:TVsymptom .
 
 d:TVSnosound
-      a       q:SelectedAnswer ;
+      a       q:Answer ;
       owl:differentFrom d:TVSnothing ;
       q:answerText "No Sound" .
 
 d:TVSnothing
-      a       q:SelectedAnswer ;
+      a       q:Answer ;
       q:answerText "No Picture" .
 
 d:TVSreception
@@ -131,7 +131,3 @@ d:whatIssue
       a       q:Question ;
       q:hasOption d:PNew , d:PCancel , d:PTech , d:PBilling ;
       q:questionText "What can customer service help you with today?" .
-
-q:hasPrerequisite
-      rdfs:domain q:Question ;
-      rdfs:range q:Answer .
