@@ -1,0 +1,10 @@
+ID	ModelNo	Division	Product Line	Manufacture Location	SKU	Available
+1	ZX-3	Manufacturing support	Papermachine	Sacramento	FB3524	23
+2	ZX-3P	Manufacturing support	Paper machine	Sacramento	KD5243	4
+3	ZX-3S	Manufacturing support	Paper machine	Sacramento	IL4028	34
+4	B-1430	Control Engineering	Feedback line	Elizabeth	KS4520	23
+5	B-1430X	Control Engineering	Feedback line	Elizabeth	CL5934	14
+6	B-1431	Control Engineering	Active sensor	Seoul	KK3945	0
+7	DBB-12	Accessories	Monitor	Hong Kong	ND5520	100
+8	SP-1234	Safety	Safety	valve	Cleveland	HI4554	4
+9	SPX-1234	Safety	Safety	valve	Cleveland	OP5333	14

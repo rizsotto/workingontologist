@@ -1,0 +1,130 @@
+# Saved by TopBraid on Sun Nov 23 22:31:03 PST 2008
+# baseURI: http://www.workingontologist.org/Examples/Chapter10/questionnaire.owl
+
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix q:       <http://www.workingontologist.org/Examples/Chapter10/questionnaire.owl#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+
+<http://www.workingontologist.org/Examples/Chapter10/questionnaire.owl>
+      a       owl:Ontology ;
+      owl:versionInfo "Created with TopBraid Composer"^^xsd:string .
+
+q:Answer
+      a       owl:Class .
+
+q:AnsweredQuestion
+      a       owl:Class ;
+      rdfs:subClassOf owl:Thing ;
+      owl:equivalentClass
+              [ a       owl:Restriction ;
+                owl:onProperty q:hasSelectedOption ;
+                owl:someValuesFrom q:Answer
+              ] .
+
+q:CandidateQuestion
+      a       owl:Class ;
+      owl:equivalentClass
+              [ a       owl:Class ;
+                owl:intersectionOf (q:HighPriorityItem q:EnabledQuestion)
+              ] .
+
+q:EnabledQuestion
+      a       owl:Class .
+
+q:High
+      a       q:PriorityLevel .
+
+q:HighPriorityItem
+      a       owl:Class ;
+      rdfs:subClassOf owl:Thing ;
+      owl:equivalentClass
+              [ a       owl:Restriction ;
+                owl:hasValue q:High ;
+                owl:onProperty q:hasPriority
+              ] .
+
+q:Low
+      a       q:PriorityLevel .
+
+q:LowPriorityItem
+      a       owl:Class ;
+      rdfs:subClassOf owl:Thing ;
+      owl:equivalentClass
+              [ a       owl:Restriction ;
+                owl:hasValue q:Low ;
+                owl:onProperty q:hasPriority
+              ] .
+
+q:Medium
+      a       q:PriorityLevel .
+
+q:MediumPriorityItem
+      a       owl:Class ;
+      rdfs:subClassOf owl:Thing ;
+      owl:equivalentClass
+              [ a       owl:Restriction ;
+                owl:hasValue q:Medium ;
+                owl:onProperty q:hasPriority
+              ] .
+
+q:PriorityItem
+      a       owl:Class ;
+      rdfs:subClassOf q:Question .
+
+q:PriorityLevel
+      a       owl:Class .
+
+q:Question
+      a       owl:Class .
+
+q:SelectedAnswer
+      a       owl:Class ;
+      rdfs:subClassOf q:Answer ;
+      rdfs:subClassOf
+              [ a       owl:Restriction ;
+                owl:allValuesFrom q:EnabledQuestion ;
+                owl:onProperty q:enablesCandidate
+              ] .
+
+q:answerText
+      a       owl:DatatypeProperty ;
+      rdfs:domain q:Answer ;
+      rdfs:range xsd:string .
+
+q:enablesCandidate
+      a       owl:ObjectProperty ;
+      rdfs:domain q:Answer ;
+      rdfs:range q:Question .
+
+q:hasOption
+      a       owl:ObjectProperty .
+
+q:hasPrerequisite
+      a       owl:ObjectProperty .
+
+q:hasPriority
+      a       owl:ObjectProperty ;
+      rdfs:domain q:PriorityItem .
+
+q:hasSelectedOption
+      a       owl:ObjectProperty ;
+      rdfs:range q:SelectedAnswer ;
+      rdfs:subPropertyOf q:hasOption .
+
+q:optionOf
+      a       owl:ObjectProperty ;
+      rdfs:domain q:Answer ;
+      rdfs:range q:Question ;
+      owl:inverseOf q:hasOption .
+
+q:questionText
+      a       owl:DatatypeProperty , owl:FunctionalProperty ;
+      rdfs:domain q:Question ;
+      rdfs:range xsd:string .
+
+[]    a       owl:Restriction ;
+      rdfs:subClassOf q:EnabledQuestion ;
+      owl:allValuesFrom q:SelectedAnswer ;
+      owl:onProperty q:hasPrerequisite .

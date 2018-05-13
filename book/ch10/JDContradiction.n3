@@ -1,0 +1,189 @@
+# Saved by TopBraid on Sun Nov 23 23:03:34 PST 2008
+# baseURI: http://www.workingontologist.com/Examples/Chapter10/JDContradiction.owl
+
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix :        <http://www.workingontologist.com/Examples/Chapter10/JDContradiction.owl#> .
+
+rdfs:label
+      a       owl:AnnotationProperty .
+
+owl:versionInfo
+      a       owl:AnnotationProperty .
+
+<http://www.workingontologist.com/Examples/Chapter10/JamesDean.owl>
+      a       owl:Ontology ;
+      owl:versionInfo "Created with TopBraid Composer"^^xsd:string .
+
+[]
+      a       owl:AllDifferent ;
+      owl:distinctMembers (:EastOfEden :Giant :Rebel)  .
+
+:AntonioBanderasMovie
+      a       owl:Class ;
+      rdfs:label "Antonio banderas movie"^^xsd:string ;
+      rdfs:subClassOf :Movie ;
+      owl:disjointWith :JudyGarlandMovie , :JudiDenchMovie , :TomCruiseMovie , :JamesDeanMovie .
+
+:DoTheRightThing
+      a       :SpikeLeeMovie .
+
+:EastOfEden
+      a       :JamesDeanMovie ;
+      rdfs:label "East of Eden"^^xsd:string .
+
+:FewMovieOwner
+      a       owl:Class ;
+      owl:complementOf :NotFewMovieOwner ;
+      owl:intersectionOf (:MovieFan [ a       owl:Restriction ;
+                  owl:maxCardinality "3"^^xsd:nonNegativeInteger ;
+                  owl:onProperty :ownsMovie
+                ]) .
+
+:Giant
+      a       :JamesDeanMovie ;
+      rdfs:label "Giant"^^xsd:string .
+
+:JamesDeanExclusive
+      a       owl:Class ;
+      owl:intersectionOf (:MovieFan [ a       owl:Restriction ;
+                  owl:allValuesFrom :JamesDeanMovie ;
+                  owl:onProperty :ownsMovie
+                ]) .
+
+:JamesDeanFan
+      a       owl:Class ;
+      owl:intersectionOf (:MovieFan [ a       owl:Restriction ;
+                  owl:onProperty :ownsMovie ;
+                  owl:someValuesFrom :JamesDeanMovie
+                ]) .
+
+:JamesDeanMovie
+      a       owl:Class ;
+      rdfs:subClassOf :PaulsMovies , :Movie ;
+      owl:disjointWith :SpikeLeeMovie , :JudiDenchMovie , :TomCruiseMovie ;
+      owl:oneOf (:EastOfEden :Giant :Rebel) .
+
+:JamesDeanObsessive
+      a       owl:Class ;
+      owl:intersectionOf (:MovieFan [ a       owl:Restriction ;
+                  owl:allValuesFrom :JamesDeanMovie ;
+                  owl:onProperty :ownsMovie
+                ] [ a       owl:Restriction ;
+                  owl:cardinality "3"^^xsd:nonNegativeInteger ;
+                  owl:onProperty :ownsMovie
+                ]) .
+
+:JudiDenchMovie
+      a       owl:Class ;
+      rdfs:label "Judi dench movie"^^xsd:string ;
+      rdfs:subClassOf :Movie ;
+      owl:disjointWith :JudyGarlandMovie , :TomCruiseMovie .
+
+:JudyGarlandMovie
+      a       owl:Class ;
+      rdfs:label "Judy garland movie"^^xsd:string ;
+      rdfs:subClassOf :Movie ;
+      owl:disjointWith :TomCruiseMovie , :JamesDeanMovie.
+
+:ManyMovieOwner
+      a       owl:Class ;
+      owl:equivalentClass
+              [ a       owl:Restriction ;
+                owl:minCardinality "4"^^xsd:nonNegativeInteger ;
+                owl:onProperty :ownsMovie
+              ] .
+
+:Movie
+      a       owl:Class .
+
+:MovieFan
+      a       owl:Class .
+
+:NotFewMovieOwner
+      a       owl:Class .
+
+:Paul
+      a       :MovieFan ;
+      a       [ a       owl:Restriction ;
+                owl:onProperty :ownsMovie ;
+                owl:someValuesFrom :AntonioBanderasMovie
+              ] ;
+      a       [ a       owl:Restriction ;
+                owl:onProperty :ownsMovie ;
+                owl:someValuesFrom :TomCruiseMovie
+              ] ;
+      a       [ a       owl:Restriction ;
+                owl:onProperty :ownsMovie ;
+                owl:someValuesFrom :JudiDenchMovie
+              ] ;
+      a       [ a       owl:Restriction ;
+                owl:onProperty :ownsMovie ;
+                owl:someValuesFrom :JudyGarlandMovie
+              ] ;
+      a       [ a       owl:Restriction ;
+                owl:onProperty :ownsMovie ;
+                owl:someValuesFrom
+                        [ a       owl:Class ;
+                          owl:complementOf :JamesDeanMovie
+                        ]
+              ] .
+
+:PaulsMovies
+      a       owl:Class ;
+      owl:intersectionOf (:Movie [ a       owl:Restriction ;
+                  owl:hasValue :Paul ;
+                  owl:onProperty :ownedBy
+                ]) .
+
+:Rebel
+      a       :JamesDeanMovie ;
+      rdfs:label "Rebel Without a Cause"^^xsd:string .
+
+:RimbaudsMovie
+      a       :JamesDeanMovie ;
+      owl:differentFrom :Giant , :EastOfEden .
+
+:Rocky
+      a       :ThreeMovieOwner , :JamesDeanExclusive ;
+      a [ a owl:Restriction ;
+            owl:onProperty :ownsMovie ;
+	    owl:someValuesFrom  :JudyGarlandMovie ] .
+
+:SevenMovieOwner
+      a       owl:Class ;
+      rdfs:label "Seven movie owner"^^xsd:string ;
+      rdfs:subClassOf :Movie ;
+      owl:equivalentClass
+              [ a       owl:Restriction ;
+                owl:minCardinality "7"^^xsd:int ;
+                owl:onProperty :ownsMovie
+              ] .
+
+:SpikeLeeMovie
+      a       owl:Class ;
+      rdfs:subClassOf :Movie ;
+      owl:disjointWith :JamesDeanMovie .
+
+:ThreeMovieOwner
+      a       owl:Class ;
+      owl:intersectionOf (:MovieFan [ a       owl:Restriction ;
+                  owl:cardinality "3"^^xsd:nonNegativeInteger ;
+                  owl:onProperty :ownsMovie
+                ]) .
+
+:TomCruiseMovie
+      a       owl:Class ;
+      rdfs:label "Tom cruise movie"^^xsd:string ;
+      rdfs:subClassOf :Movie .
+
+:ownedBy
+      a       owl:ObjectProperty .
+
+:ownsMovie
+      a       owl:ObjectProperty ;
+      rdfs:domain :MovieFan ;
+      rdfs:range :Movie ;
+      owl:inverseOf :ownedBy .

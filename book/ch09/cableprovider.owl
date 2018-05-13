@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:q="http://www.workingontologist.org/Examples/Chapter9/questionnaire.owl#"
+    xmlns:d="http://www.workingontologist.org/Examples/Chapter9/cableprovider.owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xml:base="http://www.workingontologist.org/Examples/Chapter9/cableprovider.owl">
+  <owl:Ontology rdf:about="">
+    <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Created with TopBraid Composer</owl:versionInfo>
+    <owl:imports rdf:resource="http://www.workingontologist.org/Examples/Chapter9/questionnaire.owl"/>
+  </owl:Ontology>
+  <q:Question rdf:ID="WhatProblem">
+    <q:questionText>What system are you having trouble with?</q:questionText>
+    <q:hasSelectedOption>
+      <q:Answer rdf:ID="STV">
+        <q:enablesCandidate>
+          <q:Question rdf:ID="TVsymptom">
+            <q:questionText>What television symptoms are you having?</q:questionText>
+            <q:hasOption>
+              <q:Answer rdf:ID="TVSreception">
+                <q:answerText>Bad reception</q:answerText>
+              </q:Answer>
+            </q:hasOption>
+            <q:hasOption>
+              <q:Answer rdf:ID="TVStiling">
+                <q:answerText>Tiling</q:answerText>
+              </q:Answer>
+            </q:hasOption>
+            <q:hasOption>
+              <q:Answer rdf:ID="TVSnosound">
+                <q:answerText>No Sound</q:answerText>
+              </q:Answer>
+            </q:hasOption>
+            <q:hasOption>
+              <q:Answer rdf:ID="TVSnothing">
+                <q:answerText>No Picture</q:answerText>
+              </q:Answer>
+            </q:hasOption>
+            <rdf:type rdf:resource="http://www.workingontologist.org/Examples/Chapter9/questionnaire.owl#HighPriorityItem"/>
+          </q:Question>
+        </q:enablesCandidate>
+        <q:answerText>Cable TV</q:answerText>
+      </q:Answer>
+    </q:hasSelectedOption>
+    <q:hasPriority rdf:resource="http://www.workingontologist.org/Examples/Chapter9/questionnaire.owl#High"/>
+    <q:hasOption rdf:resource="#STV"/>
+    <q:hasOption>
+      <q:Answer rdf:ID="SInternet">
+        <q:enablesCandidate>
+          <rdf:Description rdf:ID="InternetSymptom">
+            <q:hasPriority rdf:resource="http://www.workingontologist.org/Examples/Chapter9/questionnaire.owl#Low"/>
+          </rdf:Description>
+        </q:enablesCandidate>
+        <q:answerText>High-speed Internet</q:answerText>
+      </q:Answer>
+    </q:hasOption>
+    <q:hasOption>
+      <q:Answer rdf:ID="SBoth">
+        <q:enablesCandidate rdf:resource="#TVsymptom"/>
+        <q:enablesCandidate rdf:resource="#InternetSymptom"/>
+        <q:answerText>Both</q:answerText>
+      </q:Answer>
+    </q:hasOption>
+  </q:Question>
+  <q:Question rdf:ID="othersinbuilding">
+    <q:questionText>Do you live in a multi-unit dwelling with other customers?</q:questionText>
+    <q:hasOption>
+      <q:Answer rdf:ID="OYes">
+        <q:answerText>Yes.</q:answerText>
+      </q:Answer>
+    </q:hasOption>
+    <q:hasOption>
+      <q:Answer rdf:ID="ONo">
+        <q:answerText> No.</q:answerText>
+      </q:Answer>
+    </q:hasOption>
+  </q:Question>
+  <q:Question rdf:ID="NeighborsToo">
+    <q:questionText>Are other customers in your building also experiencing problems?</q:questionText>
+    <q:hasPrerequisite>
+      <q:Answer rdf:ID="PTech">
+        <q:answerText>Technical difficulty</q:answerText>
+      </q:Answer>
+    </q:hasPrerequisite>
+    <q:hasPrerequisite rdf:resource="#OYes"/>
+    <q:hasOption>
+      <q:Answer rdf:ID="NTN">
+        <q:answerText> No, my neighbors are not experiencing the same problem.</q:answerText>
+      </q:Answer>
+    </q:hasOption>
+    <q:hasOption>
+      <q:Answer rdf:ID="NTDK">
+        <q:answerText>I don't know.</q:answerText>
+      </q:Answer>
+    </q:hasOption>
+    <q:hasOption>
+      <q:Answer rdf:ID="NTY">
+        <q:answerText>Yes, my neighbors are experiencing the same problem.</q:answerText>
+      </q:Answer>
+    </q:hasOption>
+  </q:Question>
+  <q:Question rdf:ID="whatIssue">
+    <q:questionText>What can customer service help you with today?</q:questionText>
+    <q:hasOption>
+      <q:Answer rdf:ID="PBilling">
+        <q:answerText>Billing question.</q:answerText>
+      </q:Answer>
+    </q:hasOption>
+    <q:hasOption rdf:resource="#PTech"/>
+    <q:hasOption>
+      <q:Answer rdf:ID="PCancel">
+        <q:answerText>Cancel account</q:answerText>
+      </q:Answer>
+    </q:hasOption>
+    <q:hasOption>
+      <q:Answer rdf:ID="PNew">
+        <q:answerText>New account</q:answerText>
+      </q:Answer>
+    </q:hasOption>
+  </q:Question>
+</rdf:RDF>
+
+<!-- Created with TopBraid Composer -->
