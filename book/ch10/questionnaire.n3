@@ -25,10 +25,7 @@ q:AnsweredQuestion
 
 q:CandidateQuestion
       a       owl:Class ;
-      owl:equivalentClass
-              [ a       owl:Class ;
-                owl:intersectionOf (q:HighPriorityItem q:EnabledQuestion)
-              ] .
+      owl:equivalentClass q:EnabledQuestion .
 
 q:EnabledQuestion
       a       owl:Class .
@@ -102,7 +99,9 @@ q:hasOption
       a       owl:ObjectProperty .
 
 q:hasPrerequisite
-      a       owl:ObjectProperty .
+      a       owl:ObjectProperty ;
+      rdfs:domain q:Question ;
+      rdfs:range q:Answer .
 
 q:hasPriority
       a       owl:ObjectProperty ;
@@ -124,7 +123,8 @@ q:questionText
       rdfs:domain q:Question ;
       rdfs:range xsd:string .
 
-[]    a       owl:Restriction ;
-      rdfs:subClassOf q:EnabledQuestion ;
-      owl:allValuesFrom q:SelectedAnswer ;
-      owl:onProperty q:hasPrerequisite .
+[ a owl:Restriction ;
+  owl:onProperty q:hasPrerequisite ;
+  owl:allValuesFrom q:SelectedAnswer ]
+    rdfs:subClassOf q:EnabledQuestion .
+

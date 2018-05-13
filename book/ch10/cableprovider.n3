@@ -102,7 +102,7 @@ d:TVTurnedOn
       q:questionText "Is your television turned on?"^^xsd:string .
 
 d:TVsymptom
-      a       q:HighPriorityItem , q:Question ;
+      a       q:Question ;
       a       [ a       owl:Restriction ;
                 owl:cardinality "1"^^xsd:int ;
                 owl:onProperty q:hasPrerequisite
@@ -112,14 +112,12 @@ d:TVsymptom
       q:questionText "What television symptoms are you having?" .
 
 d:WhatProblem
-      a       q:Question ;
+      a       q:Question , q:EnabledQuestion ;
       a       [ a       owl:Restriction ;
                 owl:cardinality "0"^^xsd:int ;
                 owl:onProperty q:hasPrerequisite
               ] ;
       q:hasOption d:SBoth , d:SInternet , d:STV ;
-      q:hasPriority q:High ;
-      q:hasSelectedOption d:STV ;
       q:questionText "What system are you having trouble with?" .
 
 d:othersinbuilding
