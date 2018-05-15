@@ -18,21 +18,19 @@ class JenaKnowledgeBase(model: InfModel) extends KnowledgeBase {
       q <- getQuestionWithOptions(qUrl)
     } yield q
 
-
   override def registerAnswer(answer: QuestionWithAnswer): Try[UnitType.type] =
     Try.apply {
       answer.q.url.addProperty(hasSelectedOption, answer.a.url)
     }
     .map(_ => UnitType)
 
+
   private def selectNextQuestion(): Try[Resource] =
     Try.apply {
       model.listStatements(null, hasType, CandidateQuestion).toList.asScala
         .map(_.getSubject)
-        .find { candidate =>
-          ! candidate.hasProperty(hasType, AnsweredQuestion)
-        }
-        .get
+        .filter { candidate => !candidate.hasProperty(hasType, AnsweredQuestion) }
+        .head
     }
 
   private def getQuestionWithOptions(subject: Resource): Try[QuestionWithOptions] =
@@ -40,7 +38,6 @@ class JenaKnowledgeBase(model: InfModel) extends KnowledgeBase {
       q <- getQuestion(subject)
       as <- getAnswers(q.url)
     } yield QuestionWithOptions(q, as)
-
 
   private def getAnswers(node: Resource): Try[List[Answer]] =
     sequence {
@@ -70,9 +67,9 @@ class JenaKnowledgeBase(model: InfModel) extends KnowledgeBase {
 }
 
 object JenaKnowledgeBase {
-  def apply(): JenaKnowledgeBase = {
-    val schema = FileManager.get().loadModel("file:book/ch10/questionnaire.n3")
-    val data = FileManager.get().loadModel("file:book/ch10/cableprovider.n3")
+  def apply(schemaFile: String, dataFile: String): JenaKnowledgeBase = {
+    val schema = FileManager.get().loadModel(s"file:$schemaFile")
+    val data = FileManager.get().loadModel(s"file:$dataFile")
 
     val reasoner = ReasonerRegistry.getOWLReasoner.bindSchema(schema)
 

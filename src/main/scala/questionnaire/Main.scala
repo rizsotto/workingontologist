@@ -5,17 +5,22 @@ import questionnaire.KnowledgeBase.QuestionWithAnswer
 import scala.io.StdIn
 import scala.util.{Failure, Success, Try}
 
+
 object Main extends App {
 
-  val model: KnowledgeBase = JenaKnowledgeBase()
+  val kb: KnowledgeBase = JenaKnowledgeBase(
+    "book/ch10/questionnaire.n3",
+    "book/ch10/cableprovider.n3")
+
   Stream.continually {
     for {
-      q <- model.nextQuestion()
+      q <- kb.nextQuestion()
       a <- ask(q)
-      _ <- model.registerAnswer(a)
+      _ <- kb.registerAnswer(a)
     } yield KnowledgeBase.UnitType
   }.dropWhile(_.isSuccess)
 
+  
   def ask(question: KnowledgeBase.QuestionWithOptions): Try[KnowledgeBase.QuestionWithAnswer] = {
     println
     println(s"${question.q.text}")
