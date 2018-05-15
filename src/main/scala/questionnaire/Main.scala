@@ -1,13 +1,13 @@
-package qa
+package questionnaire
 
-import qa.KnowledgeBase.QuestionWithAnswer
+import questionnaire.KnowledgeBase.QuestionWithAnswer
 
 import scala.io.StdIn
 import scala.util.{Failure, Success, Try}
 
 object Main extends App {
 
-  val model = KnowledgeBaseImpl()
+  val model: KnowledgeBase = JenaKnowledgeBase()
   Stream.continually {
     for {
       q <- model.nextQuestion()

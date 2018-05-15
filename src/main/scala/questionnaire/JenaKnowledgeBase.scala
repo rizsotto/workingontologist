@@ -1,6 +1,6 @@
-package qa
+package questionnaire
 
-import org.apache.jena.rdf.model._
+import org.apache.jena.rdf.model.{InfModel, ModelFactory, Property, Resource}
 import org.apache.jena.reasoner.ReasonerRegistry
 import org.apache.jena.util.FileManager
 
@@ -8,25 +8,9 @@ import scala.collection.JavaConverters._
 import scala.util.Try
 
 
-trait KnowledgeBase {
+class JenaKnowledgeBase(model: InfModel) extends KnowledgeBase {
+  import JenaKnowledgeBase._
   import KnowledgeBase._
-
-  def nextQuestion(): Option[QuestionWithOptions]
-  def registerAnswer(answer: QuestionWithAnswer): Option[UnitType.type]
-}
-
-object KnowledgeBase {
-  case object UnitType
-  case class Question(url: Resource, text: String)
-  case class Answer(url: Resource, text: String)
-  case class QuestionWithOptions(q: Question, as: List[Answer])
-  case class QuestionWithAnswer(q: Question, a: Answer)
-}
-
-
-class KnowledgeBaseImpl(model: InfModel) extends KnowledgeBase {
-  import KnowledgeBase._
-  import KnowledgeBaseImpl._
 
   override def nextQuestion(): Option[QuestionWithOptions] =
     for {
@@ -49,8 +33,8 @@ class KnowledgeBaseImpl(model: InfModel) extends KnowledgeBase {
           .map(_.getSubject)
           // this shall be done by the owl
           .find { candidate =>
-            ! candidate.hasProperty(hasType, model.getResource(s"$qNs#AnsweredQuestion"))
-          }
+          ! candidate.hasProperty(hasType, model.getResource(s"$qNs#AnsweredQuestion"))
+        }
       }
   }
 
@@ -91,15 +75,15 @@ class KnowledgeBaseImpl(model: InfModel) extends KnowledgeBase {
     Try(model.getResource(s"$qNs#$name")).toOption
 }
 
-object KnowledgeBaseImpl {
-  def apply(): KnowledgeBaseImpl = {
+object JenaKnowledgeBase {
+  def apply(): JenaKnowledgeBase = {
     val schema = FileManager.get().loadModel("file:book/ch10/questionnaire.n3")
     val data = FileManager.get().loadModel("file:book/ch10/cableprovider.n3")
 
     val reasoner = ReasonerRegistry.getOWLReasoner.bindSchema(schema)
 
     val model = ModelFactory.createInfModel(reasoner, data)
-    new KnowledgeBaseImpl(model)
+    new JenaKnowledgeBase(model)
   }
 
   private def sequence[A](a:List[Option[A]]):Option[List[A]] = a match {
