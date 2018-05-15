@@ -5,74 +5,68 @@ import org.apache.jena.reasoner.ReasonerRegistry
 import org.apache.jena.util.FileManager
 
 import scala.collection.JavaConverters._
-import scala.util.Try
+import scala.util.{Success, Try}
 
 
 class JenaKnowledgeBase(model: InfModel) extends KnowledgeBase {
   import JenaKnowledgeBase._
   import KnowledgeBase._
 
-  override def nextQuestion(): Option[QuestionWithOptions] =
+  override def nextQuestion(): Try[QuestionWithOptions] =
     for {
       qUrl <- selectNextQuestion()
       q <- getQuestionWithOptions(qUrl)
     } yield q
 
 
-  override def registerAnswer(answer: QuestionWithAnswer): Option[UnitType.type] =
-    getProperty("hasSelectedOption").map { property =>
-      answer.q.url.addProperty(property, answer.a.url)
-    }.map(_ => UnitType)
+  override def registerAnswer(answer: QuestionWithAnswer): Try[UnitType.type] =
+    Try.apply {
+      answer.q.url.addProperty(hasSelectedOption, answer.a.url)
+    }
+    .map(_ => UnitType)
 
-  private def selectNextQuestion(): Option[Resource] = {
-    val hasType = model.getProperty(s"$rdfNs#type")
-
-    getResource("CandidateQuestion")
-      .flatMap { obj =>
-        model.listStatements(null, hasType, obj).toList.asScala
-          .map(_.getSubject)
-          // this shall be done by the owl
-          .find { candidate =>
-          ! candidate.hasProperty(hasType, model.getResource(s"$qNs#AnsweredQuestion"))
+  private def selectNextQuestion(): Try[Resource] =
+    Try.apply {
+      model.listStatements(null, hasType, CandidateQuestion).toList.asScala
+        .map(_.getSubject)
+        .find { candidate =>
+          ! candidate.hasProperty(hasType, AnsweredQuestion)
         }
-      }
-  }
+        .get
+    }
 
-  private def getQuestionWithOptions(subject: Resource): Option[QuestionWithOptions] =
+  private def getQuestionWithOptions(subject: Resource): Try[QuestionWithOptions] =
     for {
       q <- getQuestion(subject)
       as <- getAnswers(q.url)
     } yield QuestionWithOptions(q, as)
 
 
-  private def getAnswers(node: Resource): Option[List[Answer]] =
-    getProperty("hasOption")
-      .flatMap { property =>
-        val answers = node.listProperties(property).toList.asScala
-          .map(_.getResource).toList
-          .map(getAnswer)
-        sequence(answers)
-      }
+  private def getAnswers(node: Resource): Try[List[Answer]] =
+    sequence {
+      node.listProperties(hasOption).toList.asScala
+        .map(_.getResource).toList
+        .map(getAnswer)
+    }
 
-  private def getQuestion(node: Resource): Option[Question] =
-    getProperty("questionText")
-      .map { property =>
-        val text = node.getProperty(property).getString
-        Question(node, text)
-      }
+  private def getQuestion(node: Resource): Try[Question] =
+    Try.apply { node.getProperty(questionText).getString }
+      .map(Question(node, _))
 
-  private def getAnswer(node: Resource): Option[Answer] =
-    getProperty("answerText")
-      .map { property =>
-        val text = node.getProperty(property).getString
-        Answer(node, text)
-      }
+  private def getAnswer(node: Resource): Try[Answer] =
+    Try.apply { node.getProperty(answerText).getString }
+      .map(Answer(node, _))
 
-  private def getProperty(name: String): Option[Property] =
-    Try(model.getProperty(s"$qNs#$name")).toOption
 
-  private def getResource(name: String): Option[Resource] =
-    Try(model.getResource(s"$qNs#$name")).toOption
+  private lazy val hasType = model.getProperty(s"$rdfNs#type")
+
+  private lazy val answerText: Property = model.getProperty(s"$qNs#answerText")
+  private lazy val questionText: Property = model.getProperty(s"$qNs#questionText")
+  private lazy val hasOption: Property = model.getProperty(s"$qNs#hasOption")
+  private lazy val hasSelectedOption: Property = model.getProperty(s"$qNs#hasSelectedOption")
+
+  private lazy val CandidateQuestion: Resource = model.getResource(s"$qNs#CandidateQuestion")
+  private lazy val AnsweredQuestion: Resource = model.getResource(s"$qNs#AnsweredQuestion")
 }
 
 object JenaKnowledgeBase {
@@ -86,8 +80,8 @@ object JenaKnowledgeBase {
     new JenaKnowledgeBase(model)
   }
 
-  private def sequence[A](a:List[Option[A]]):Option[List[A]] = a match {
-    case Nil => Some(Nil)
+  private def sequence[A](a:List[Try[A]]): Try[List[A]] = a match {
+    case Nil => Success(Nil)
     case h::t => h flatMap (r => sequence(t) map (r :: _))
   }
 

@@ -14,9 +14,9 @@ object Main extends App {
       a <- ask(q)
       _ <- model.registerAnswer(a)
     } yield KnowledgeBase.UnitType
-  }.dropWhile(_.isDefined)
+  }.dropWhile(_.isSuccess)
 
-  def ask(question: KnowledgeBase.QuestionWithOptions): Option[KnowledgeBase.QuestionWithAnswer] = {
+  def ask(question: KnowledgeBase.QuestionWithOptions): Try[KnowledgeBase.QuestionWithAnswer] = {
     println
     println(s"${question.q.text}")
     println
@@ -34,6 +34,5 @@ object Main extends App {
       .map { idx: Int =>
         QuestionWithAnswer(question.q, question.as(idx))
       }
-      .toOption
   }
 }

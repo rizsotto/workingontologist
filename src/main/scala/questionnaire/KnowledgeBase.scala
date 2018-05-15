@@ -2,12 +2,14 @@ package questionnaire
 
 import org.apache.jena.rdf.model.Resource
 
+import scala.util.Try
+
 
 trait KnowledgeBase {
   import KnowledgeBase._
 
-  def nextQuestion(): Option[QuestionWithOptions]
-  def registerAnswer(answer: QuestionWithAnswer): Option[UnitType.type]
+  def nextQuestion(): Try[QuestionWithOptions]
+  def registerAnswer(answer: QuestionWithAnswer): Try[UnitType.type]
 }
 
 object KnowledgeBase {
