@@ -33,10 +33,10 @@ object Main extends App {
 
     val max = question.as.length
     Try(StdIn.readInt)
-      .flatMap { idx: Int =>
+      .flatMap { (idx: Int) =>
         if (idx >= max) Failure(new IllegalArgumentException("index out of range")) else Success(idx)
       }
-      .map { idx: Int =>
+      .map { (idx: Int) =>
         QuestionWithAnswer(question.q, question.as(idx))
       }
   }
