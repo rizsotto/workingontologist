@@ -1,5 +1,0 @@
-language: scala
-sudo: false
-
-scala:
-  - 3.2.0
