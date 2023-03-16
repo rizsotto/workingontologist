@@ -1,6 +1,6 @@
 import Dependencies._
 
-scalaVersion := "3.2.0"
+scalaVersion := "3.2.2"
 
 lazy val root = (project in file(".")).
   settings(
